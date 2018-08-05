@@ -1,0 +1,22 @@
+donees<-read.table(file="heart.txt",dec=" ",header=TRUE)
+summary(donees)
+arbre.full<-rpart(coeur~ .,data=donees,method="class")
+print(arbre.full)
+
+library(rpart)
+library(rpart.plot)
+plot(arbre.full,margin=0.1,main="Occurece of heart diseases")
+text(arbre.full, use.n=TRUE, all=TRUE, cex=.7)
+library(rattle)
+fancyRpartPlot(arbre.full)
+printcp(arbre.full)
+plotcp(arbre.full, minline = TRUE)
+arbre.full1<-prune(arbre.full,cp= 0.03)
+fancyRpartPlot(arbre.full1)
+arbre.full1
+
+pred<-predict(arbre.full,newdata=donees,type="class")
+mc<-table(donees$coeur,pred)
+print(mc)
+err.resub<-1.0-(mc[1,1]+mc[2,2])/sum(mc)
+print(err.resub)
